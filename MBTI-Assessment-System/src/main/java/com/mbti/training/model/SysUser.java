@@ -9,6 +9,16 @@ public class SysUser {
     private String role;
     private Date createTime;
 
+    private String avatar;
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     public String getRole() {
         return role;
     }

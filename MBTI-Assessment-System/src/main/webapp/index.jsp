@@ -5,134 +5,87 @@
     <meta charset="UTF-8">
     <title>登录 - MBTI 测试系统</title>
     <link href="https://cdn.staticfile.org/twitter-bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/style.css" rel="stylesheet">
+
     <style>
+        /* 针对 header 隐藏原有的导航栏背景，让整体更沉浸 */
         .navbar { display: none !important; }
 
-        body {
-            background: linear-gradient(-45deg, #e66465, #9198e5, #f68084, #a6c0fe);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Noto Sans SC', sans-serif;
-            margin: 0;
-            position: relative; /* 为悬浮标题提供定位基准 */
-        }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* 🌟 新增：左上角悬浮标题 */
-        .floating-header {
-            position: absolute;
-            top: 30px;
-            left: 40px;
-            color: white;
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-decoration: none;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            letter-spacing: 1px;
-            transition: 0.3s opacity;
-        }
-        .floating-header:hover {
-            color: white;
-            opacity: 0.8;
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.15) !important;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 20px !important;
-            border: 1px solid rgba(255, 255, 255, 0.3) !important;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2) !important;
-            color: white !important;
-            width: 100%;
-            max-width: 450px;
-            padding: 40px 30px;
-        }
-
+        /* 针对输入框的毛玻璃细节优化，覆盖 Bootstrap 默认样式 */
         .glass-input {
-            background: rgba(255, 255, 255, 0.1) !important;
+            background: rgba(255, 255, 255, 0.2) !important;
             border: 1px solid rgba(255, 255, 255, 0.4) !important;
-            color: white !important;
+            color: #333 !important; /* 配合浅色渐变背景，字体改为深灰色 */
             border-radius: 10px !important;
             padding: 12px 15px !important;
         }
-
-        .glass-input::placeholder { color: rgba(255, 255, 255, 0.7) !important; }
+        .glass-input::placeholder { color: rgba(50, 50, 50, 0.6) !important; }
         .glass-input:focus {
-            background: rgba(255, 255, 255, 0.25) !important;
-            border-color: white !important;
-            box-shadow: none !important;
+            background: rgba(255, 255, 255, 0.4) !important;
+            border-color: #fff !important;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5) !important;
         }
 
-        .glass-btn {
-            background: linear-gradient(to right, #5c7ee4, #8065b8) !important;
-            border: none !important;
-            border-radius: 10px !important;
-            color: white !important;
-            font-weight: bold;
-            letter-spacing: 4px;
-            padding: 12px;
-            transition: 0.3s;
-        }
-        .glass-btn:hover { opacity: 0.9; transform: translateY(-2px); color: white !important; }
-
-        /* 🌟 新增：底部链接的悬停特效 */
         .bottom-link {
-            color: rgba(255,255,255,0.9);
+            color: rgba(50, 50, 50, 0.8);
             text-decoration: none;
             font-size: 0.95rem;
             transition: 0.3s;
             display: inline-block;
         }
         .bottom-link:hover {
-            color: white;
-            transform: translateX(3px); /* 鼠标悬停时会有轻微向右移动的动效 */
+            color: #000;
+            transform: translateX(3px); /* 悬停轻微右移 */
         }
     </style>
 </head>
 <body>
+<%-- 依然保留 header.jsp，因为里面引入了 JSTL 标签库必备环境 --%>
 <%@ include file="header.jsp" %>
 
-<a href="index.jsp" class="floating-header">🧩 MBTI 测评系统</a>
+<div class="dynamic-fluid-bg"></div>
 
-<div class="card glass-card">
-    <div class="text-center mb-5">
-        <h2 class="fw-bold" style="letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">欢迎登录</h2>
+<div class="container m-0 p-0" style="max-width: 100%;">
+    <div class="row min-vh-100 align-items-center justify-content-center m-0">
+        <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+
+            <div class="text-center mb-4">
+                <a href="index.jsp" class="text-decoration-none fs-4 fw-bold" style="color: #333; text-shadow: 0 2px 4px rgba(255,255,255,0.5);">🧩 MBTI 测评系统</a>
+            </div>
+
+            <div class="glass-form-card">
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold" style="letter-spacing: 2px; color: #333;">欢迎登录</h2>
+                </div>
+
+                <c:if test="${not empty requestScope.successMsg}">
+                    <div class="alert alert-success py-2 text-center small bg-success bg-opacity-25 border-success">${requestScope.successMsg}</div>
+                </c:if>
+
+                <form action="login" method="post">
+                    <div class="mb-4">
+                        <input type="text" name="username" class="form-control glass-input" placeholder="👤 用户名" required>
+                    </div>
+                    <div class="mb-4">
+                        <input type="password" name="password" class="form-control glass-input" placeholder="🔒 密码" required>
+                    </div>
+
+                    <c:if test="${not empty requestScope.errorMsg}">
+                        <div class="alert alert-danger py-2 text-center small bg-danger bg-opacity-25 border-danger">${requestScope.errorMsg}</div>
+                    </c:if>
+
+                    <button type="submit" class="btn btn-primary w-100 mb-4 shadow" style="border-radius: 10px; padding: 12px; font-weight: bold; letter-spacing: 4px;">登 录</button>
+
+                    <div class="text-end">
+                        <a href="register.jsp" class="bottom-link">
+                            无账号，去注册 <span style="font-weight: bold; font-size: 1.1rem; margin-left: 5px; color: #5c7ee4;">➡</span>
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+        </div>
     </div>
-
-    <c:if test="${not empty requestScope.successMsg}">
-        <div class="alert alert-success py-2 text-center small bg-success bg-opacity-25 border-success text-white">${requestScope.successMsg}</div>
-    </c:if>
-
-    <form action="login" method="post">
-        <div class="mb-4">
-            <input type="text" name="username" class="form-control glass-input" placeholder="👤 用户名" required>
-        </div>
-        <div class="mb-4">
-            <input type="password" name="password" class="form-control glass-input" placeholder="🔒 密码" required>
-        </div>
-
-        <c:if test="${not empty requestScope.errorMsg}">
-            <div class="alert alert-danger py-2 text-center small bg-danger bg-opacity-25 border-danger text-white">${requestScope.errorMsg}</div>
-        </c:if>
-
-        <button type="submit" class="btn glass-btn w-100 mb-4">登 录</button>
-
-        <div class="text-end">
-            <a href="register.jsp" class="bottom-link">
-                无账号，去注册 <span style="color: #a6c0fe; font-weight: bold; font-size: 1.1rem; margin-left: 5px;">➡</span>
-            </a>
-        </div>
-    </form>
 </div>
 </body>
 </html>

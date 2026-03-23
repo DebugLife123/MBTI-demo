@@ -35,6 +35,7 @@ public class UserDao {
                     user.setRealName(rs.getString("real_name"));
                     user.setRole(rs.getString("role"));
                     user.setCreateTime(rs.getTimestamp("create_time"));
+                    user.setAvatar(rs.getString("avatar"));
                 }
             }
         } catch (Exception e) {
@@ -69,6 +70,65 @@ public class UserDao {
             pstmt.setString(3, realName);
             return pstmt.executeUpdate() > 0;
         } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+    public boolean updateAvatar(int userId, String avatarPath) {
+        String sql = "UPDATE sys_user SET avatar = ? WHERE id = ?";
+        try (Connection conn = DBUtils.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, avatarPath);
+            pstmt.setInt(2, userId);
+            return pstmt.executeUpdate() > 0;
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+    /**
+     * 修改用户密码
+     * @param userId 用户ID
+     * @param oldPwd 旧密码（用于安全验证）
+     * @param newPwd 新密码
+     * @return 是否修改成功
+     */
+    public boolean updatePassword(int userId, String oldPwd, String newPwd) {
+        // 首先验证旧密码是否正确
+        String checkSql = "SELECT count(*) FROM sys_user WHERE id = ? AND password = ?";
+        String updateSql = "UPDATE sys_user SET password = ? WHERE id = ?";
+
+        try (Connection conn = DBUtils.getConnection()) {
+            // 1. 验证旧密码
+            try (PreparedStatement pstmt = conn.prepareStatement(checkSql)) {
+                pstmt.setInt(1, userId);
+                pstmt.setString(2, oldPwd);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (!(rs.next() && rs.getInt(1) > 0)) {
+                        return false; // 旧密码不匹配
+                    }
+                }
+            }
+            // 2. 执行更新
+            try (PreparedStatement pstmt = conn.prepareStatement(updateSql)) {
+                pstmt.setString(1, newPwd);
+                pstmt.setInt(2, userId);
+                return pstmt.executeUpdate() > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    /**
+     * 仅更新用户的真实姓名
+     */
+    public boolean updateRealName(int userId, String newRealName) {
+        String sql = "UPDATE sys_user SET real_name = ? WHERE id = ?";
+        try (Connection conn = DBUtils.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, newRealName);
+            pstmt.setInt(2, userId);
+            return pstmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return false;
     }
 }

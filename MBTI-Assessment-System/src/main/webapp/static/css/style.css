@@ -1,0 +1,138 @@
+/* --- style.css --- */
+
+/* 定义整个页面的基础，确保背景全屏 */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: 'Poppins', sans-serif; /* 建议使用一种现代字体，如 Poppins */
+    overflow: hidden; /* 防止背景滚动出现白边 */
+}
+
+/* --- 核心：动态流体渐变背景 --- */
+.dynamic-fluid-bg {
+    position: fixed; /* 固定在全屏 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh; /* 视口高度 */
+    z-index: -1; /* 确保背景在内容层下方 */
+
+    /* 提取参考图中的颜色：粉、紫、蓝、青、奶油。
+       使用多个径向渐变叠加，模拟流动混合感。
+    */
+    background-color: #FFFAF0; /* 基础奶油白 */
+    background-image:
+            radial-gradient(at 10% 20%, #FFC0CB 0px, transparent 50%), /* 柔和粉 */
+            radial-gradient(at 80% 0%, #E0B0FF 0px, transparent 50%),   /* 柔和紫 */
+            radial-gradient(at 0% 50%, #ADD8E6 0px, transparent 50%),   /* 柔和蓝 */
+            radial-gradient(at 80% 50%, #7FFFD4 0px, transparent 50%),  /* 柔和青 */
+            radial-gradient(at 0% 100%, #FFB6C1 0px, transparent 50%),  /* 深一点的粉 */
+            radial-gradient(at 80% 100%, #D8BFD8 0px, transparent 50%); /* 深一点的紫 */
+
+    /* 添加 CSS 动画，让渐变缓慢移动
+    */
+    animation: animateGradient 15s ease infinite alternate; /* 15秒循环，平滑，交替方向 */
+}
+
+/* 渐变动画定义 */
+@keyframes animateGradient {
+    0% {
+        background-size: 100% 100%;
+    }
+    100% {
+        background-size: 120% 120%; /* 稍微放大，让径向渐变的位置产生移动 */
+    }
+}
+
+
+/* --- 核心：高级毛玻璃（Glassmorphism）卡片 --- */
+.glass-form-card {
+    /* 基础样式：半透明白色背景 */
+    background-color: rgba(255, 255, 255, 0.45); /* 透明度是关键，可微调 */
+
+    /* 核心毛玻璃效果：模糊 */
+    backdrop-filter: blur(25px); /* 模糊度，值越大越糊 */
+    -webkit-backdrop-filter: blur(25px); /* 兼容 Safari */
+
+    /* 高级质感：圆角、阴影、边框 */
+    border-radius: 20px; /* 大圆角 */
+    border: 1px solid rgba(255, 255, 255, 0.18); /* 微弱的白色边框，增加反光感 */
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15); /* 柔和的阴影 */
+
+    /* 卡片内部布局 */
+    padding: 2rem;
+}
+
+/* 统一样式，让卡片内的表单元素也更好看 */
+.glass-form-card .form-control {
+    background: rgba(255, 255, 255, 0.6);
+    border: none;
+    border-radius: 10px;
+}
+
+.glass-form-card .btn-primary {
+    background-image: linear-gradient(to right, #FFC0CB 0%, #E0B0FF  51%, #FFC0CB  100%); /* 渐变色按钮 */
+    border: none;
+    border-radius: 10px;
+    transition: 0.5s;
+    background-size: 200% auto;
+}
+
+.glass-form-card .btn-primary:hover {
+    background-position: right center; /* 按钮悬停动画 */
+}
+/* --- Dashboard 侧边栏布局样式 --- */
+.dashboard-wrapper {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f4f7f6; /* 浅灰色背景，看起来更现代 */
+}
+
+/* 左侧边栏 */
+.sidebar {
+    width: 260px;
+    background-color: #2c3e50; /* 深蓝色高级感，类似参考图 */
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+/* 侧边栏菜单项 */
+.sidebar .nav-link {
+    color: rgba(255,255,255,0.7);
+    padding: 15px 25px;
+    font-size: 1.05rem;
+    border-radius: 0;
+    transition: 0.2s;
+}
+
+.sidebar .nav-link:hover, .sidebar .nav-link.active {
+    color: #fff;
+    background-color: #34495e;
+    border-left: 4px solid #36b9cc; /* 选中时的左侧高亮条 */
+}
+
+/* 右侧主内容区 */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: auto; /* 内容过多时右侧滚动，左侧不动 */
+}
+
+/* 右侧顶部小导航（可选） */
+.topbar {
+    background: #fff;
+    height: 60px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 30px;
+}

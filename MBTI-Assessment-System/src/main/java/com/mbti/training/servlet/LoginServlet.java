@@ -37,8 +37,8 @@ public class LoginServlet extends HttpServlet {
                 // 如果是管理员，跳转到管理员专用的 Servlet
                 response.sendRedirect("adminManage");
             } else {
-                // 如果是学生，跳转到答题流程
-                response.sendRedirect("startTest");
+                // 如果是学生，跳转到首页
+                response.sendRedirect("user_dashboard.jsp");
             }
         } else {
             // 登录失败！带着错误信息回首页
