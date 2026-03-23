@@ -1,45 +1,58 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <title>测评结果</title>
-    <link href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://gs.jurieo.com/gemini/fonts-googleapis/css2?family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
-
-    <style>
-        body { font-family: 'Noto Sans SC', sans-serif; background-color: #f4f7f6; }
-        .card { border: none; border-radius: 15px; transition: 0.3s; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
-        .btn-primary { border-radius: 10px; padding: 10px 25px; }
-    </style>
+    <meta charset="UTF-8">
+    <title>测评报告 - MBTI 职业性格测试</title>
 </head>
 <body class="bg-light">
+<%-- 引用统一头部（含 CSS 和 导航栏） --%>
 <%@ include file="header.jsp" %>
-<div class="container text-center">
+
+<div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card border-top border-5 border-success p-5 shadow">
-                <div class="mb-4">
-                    <div class="display-1 text-success">🎯</div>
-                </div>
-                <h2 class="fw-bold mb-3">测评报告</h2>
-                <p class="text-muted">亲爱的 <strong>${sessionScope.currUser}</strong>，您的核心性格倾向为：</p>
+        <div class="col-md-8 col-lg-7">
+            <div class="card border-0 shadow-lg rounded-4 text-center p-5 mb-5">
+                <div class="mb-4"><span class="display-3 text-success">🏆</span></div>
+                <h2 class="fw-bold mb-4">测评分析报告</h2>
 
-                <div class="py-4 bg-light rounded-3 my-4">
-                    <h1 class="display-4 fw-bold text-primary">${requestScope.myResult}</h1>
+                <p class="text-secondary mb-3">亲爱的 <strong>${sessionScope.loginUser.realName}</strong>，根据测评，您的核心人格为：</p>
+
+                <div class="py-4 bg-primary bg-opacity-10 rounded-4 mb-4">
+                    <%-- 显示 4 位代码 (如: ESTJ) --%>
+                    <h1 class="display-2 fw-bold text-primary mb-0">${requestScope.myResult}</h1>
+                    <%-- 显示性格头衔 (如: 总经理) --%>
+                    <h3 class="text-secondary mt-2">${requestScope.personality.title}</h3>
                 </div>
 
-                <div class="text-start mb-4">
-                    <h6>💡 性格简述：</h6>
-                    <p class="small text-secondary">
-                        ${requestScope.myResult.contains('E') ?
-                                '你是一个充满活力的人，喜欢在人群中汲取能量。' :
-                                '你是一个内省且深刻的人，更喜欢在安静中思考。'}
+                <div class="mt-4 mb-5">
+                    <h6 class="text-muted mb-3">📊 维度得分详情：</h6>
+                    <div class="row g-2 text-center">
+                        <div class="col-3"><div class="p-2 bg-white border rounded small">E: ${requestScope.scores.eScore} / I: ${requestScope.scores.iScore}</div></div>
+                        <div class="col-3"><div class="p-2 bg-white border rounded small">S: ${requestScope.scores.sScore} / N: ${requestScope.scores.nScore}</div></div>
+                        <div class="col-3"><div class="p-2 bg-white border rounded small">T: ${requestScope.scores.tScore} / F: ${requestScope.scores.fScore}</div></div>
+                        <div class="col-3"><div class="p-2 bg-white border rounded small">J: ${requestScope.scores.jScore} / P: ${requestScope.scores.pScore}</div></div>
+                    </div>
+                </div>
+
+                <div class="text-start bg-light p-4 rounded-3 mb-4 border-start border-4 border-primary">
+                    <h5 class="fw-bold mb-3">🔍 性格概览</h5>
+                    <p class="text-muted leading-relaxed mb-0">
+                        ${requestScope.personality.description}
                     </p>
                 </div>
 
-                <a href="index.jsp" class="btn btn-outline-secondary">返回首页</a>
-                <button onclick="window.print()" class="btn btn-primary ms-2">下载报告 (PDF)</button>
+                <div class="text-start bg-light p-4 rounded-3 mb-4 border-start border-4 border-success">
+                    <h5 class="fw-bold mb-3">💼 职业发展建议</h5>
+                    <p class="text-muted leading-relaxed mb-0">
+                        ${requestScope.personality.careerAdvice}
+                    </p>
+                </div>
+
+                <div class="d-grid gap-2 d-md-block mt-5">
+                    <a href="startTest" class="btn btn-light btn-lg px-4 me-md-2 border">重新测试</a>
+                    <button onclick="window.print()" class="btn btn-primary btn-lg px-4 shadow">保存报告 (PDF)</button>
+                </div>
             </div>
         </div>
     </div>
