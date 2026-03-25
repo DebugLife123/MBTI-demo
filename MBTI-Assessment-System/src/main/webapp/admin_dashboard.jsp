@@ -28,25 +28,21 @@
             <h3 class="fw-bold mb-4">📊 管理员看板</h3>
 
             <div class="row mb-4">
-                <div class="col-md-6 col-lg-4 mb-3">
-                    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
+                <div class="col-md-6 col-lg-4 mb-3" style="cursor: pointer;" onclick="location.href='questionManage'">
+                    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-primary border-4">
                         <div class="d-flex align-items-center">
-                            <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
-                                <span class="fs-3">📝</span>
-                            </div>
+                            <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3"><span class="fs-3">📝</span></div>
                             <div>
                                 <h6 class="text-muted mb-1">题库总数</h6>
-                                <h4 class="fw-bold mb-0">28 道</h4>
+                                <h4 class="fw-bold mb-0">${qCount} 道</h4>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-4 mb-3">
-                    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
+                <div class="col-md-6 col-lg-4 mb-3" style="cursor: pointer;" onclick="location.href='recordManage'">
+                    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-success border-4">
                         <div class="d-flex align-items-center">
-                            <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3">
-                                <span class="fs-3">📈</span>
-                            </div>
+                            <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3"><span class="fs-3">📈</span></div>
                             <div>
                                 <h6 class="text-muted mb-1">系统测评记录</h6>
                                 <h4 class="fw-bold mb-0">${logs != null ? logs.size() : 0} 条</h4>

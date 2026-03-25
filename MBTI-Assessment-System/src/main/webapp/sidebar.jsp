@@ -27,8 +27,13 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="adminManage" class="nav-link ${param.active == 'records' ? 'active' : ''}">
+                <a href="recordManage" class="nav-link ${param.active == 'records' ? 'active' : ''}">
                     📊 测试概览
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="startTest" class="nav-link ${param.active == 'test' ? 'active' : ''}">
+                    📝 在线测试
                 </a>
             </li>
         </c:if>

@@ -143,5 +143,51 @@ public class TestRecordDao {
         return avgs;
     }
     //
+    /**
+     * 管理员专用删除：直接根据记录 ID 删除，不校验用户身份
+     */
+    public boolean delete(int recordId) {
+        String sql = "DELETE FROM test_record WHERE id = ?";
+        try (Connection conn = DBUtils.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, recordId);
+            return pstmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * 管理员专用查询：根据记录 ID 获取具体的测试结果，用于生成他人报告
+     */
+    public TestRecord getRecordById(int recordId) {
+        TestRecord tr = null;
+        String sql = "SELECT * FROM test_record WHERE id = ?";
+        try (Connection conn = DBUtils.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, recordId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    tr = new TestRecord();
+                    tr.setId(rs.getInt("id"));
+                    tr.setUserId(rs.getInt("user_id"));
+                    tr.setResultType(rs.getString("result_type"));
+                    tr.seteScore(rs.getInt("e_score"));
+                    tr.setiScore(rs.getInt("i_score"));
+                    tr.setsScore(rs.getInt("s_score"));
+                    tr.setnScore(rs.getInt("n_score"));
+                    tr.settScore(rs.getInt("t_score"));
+                    tr.setfScore(rs.getInt("f_score"));
+                    tr.setjScore(rs.getInt("j_score"));
+                    tr.setpScore(rs.getInt("p_score"));
+                    tr.setTestTime(rs.getTimestamp("test_time"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return tr;
+    }
 
 }

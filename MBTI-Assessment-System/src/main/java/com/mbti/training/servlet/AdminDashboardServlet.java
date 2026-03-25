@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import com.mbti.training.dao.QuestionDao;
 
 /**
  * 管理员看板控制器
@@ -35,6 +36,11 @@ public class AdminDashboardServlet extends HttpServlet {
         // 2. 获取表格数据：全校所有学生的测试记录
         List<Map<String, Object>> logs = adminDao.getAllTestLogs();
         request.setAttribute("logs", logs);
+
+        // 🌟 新增：获取题库总数
+        QuestionDao questionDao = new QuestionDao();
+        int qCount = questionDao.getQuestionCount();
+        request.setAttribute("qCount", qCount);
 
         // 3. 获取图表统计数据：计算 8 个维度的全网平均分
         // 调用我们之前在 TestRecordDao 中新增的统计方法
@@ -65,6 +71,7 @@ public class AdminDashboardServlet extends HttpServlet {
         // 5. 转发到管理员看板 JSP 页面
         request.getRequestDispatcher("admin_dashboard.jsp").forward(request, response);
     }
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

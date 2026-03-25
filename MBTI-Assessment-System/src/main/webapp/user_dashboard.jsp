@@ -51,7 +51,7 @@
                     <div class="card border-0 shadow-sm rounded-4 h-100 bg-primary text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;">
                         <div class="card-body p-4 d-flex flex-column justify-content-center align-items-center text-center">
                             <h4 class="fw-bold mb-3">准备好探索你自己了吗？</h4>
-                            <p class="mb-4">完成 28 道精选测试题，获取深度的职业性格解析报告。</p>
+                            <p class="mb-4">完成精选测试题，获取深度的职业性格解析报告。</p>
                             <a href="startTest" class="btn btn-light btn-lg rounded-pill px-5 fw-bold text-primary shadow">立即开始测试 🚀</a>
                         </div>
                     </div>

@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DBUtils {
     // 数据库连接配置
-    private static final String URL = "jdbc:mysql://localhost:3306/mbti_db?useSSL=false&serverTimezone=UTC";
+    private static final String URL = "jdbc:mysql://localhost:3306/mbti_db?useSSL=false&serverTimezone=Asia/Shanghai";
     private static final String USER = "root"; // 你的数据库用户名
     private static final String PASSWORD = "230011"; // 你的数据库密码
 

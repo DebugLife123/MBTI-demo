@@ -69,4 +69,21 @@ public class QuestionDao {
             pstmt.executeUpdate();
         } catch (Exception e) { e.printStackTrace(); }
     }
+
+    // 在 QuestionDao.java 中添加
+    public int getQuestionCount() {
+        int count = 0;
+        // 只统计 status = 1 (启用) 的题目
+        String sql = "SELECT COUNT(*) FROM mbti_question WHERE status = 1";
+        try (Connection conn = DBUtils.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
 }

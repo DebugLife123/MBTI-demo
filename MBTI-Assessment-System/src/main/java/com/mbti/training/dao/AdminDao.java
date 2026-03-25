@@ -11,7 +11,7 @@ public class AdminDao {
     public List<Map<String, Object>> getAllTestLogs() {
         List<Map<String, Object>> list = new ArrayList<>();
         // 关键 SQL：通过 user_id 关联查询真实姓名
-        String sql = "SELECT u.real_name, r.result_type, r.test_time, r.e_score, r.i_score, r.s_score, r.n_score, r.t_score, r.f_score, r.j_score, r.p_score " +
+        String sql = "SELECT r.id, u.username, u.real_name, r.result_type, r.test_time, r.e_score, r.i_score, r.s_score, r.n_score, r.t_score, r.f_score, r.j_score, r.p_score " +
                 "FROM test_record r " +
                 "JOIN sys_user u ON r.user_id = u.id " +
                 "ORDER BY r.test_time DESC";
@@ -22,6 +22,8 @@ public class AdminDao {
 
             while (rs.next()) {
                 Map<String, Object> map = new HashMap<>();
+                map.put("recordId", rs.getInt("id")); // 🌟 核心修改：存入记录 ID
+                map.put("username", rs.getString("username")); // 🌟 新增：存入用户名
                 map.put("realName", rs.getString("real_name"));
                 map.put("resultType", rs.getString("result_type"));
                 map.put("testTime", rs.getTimestamp("test_time"));
