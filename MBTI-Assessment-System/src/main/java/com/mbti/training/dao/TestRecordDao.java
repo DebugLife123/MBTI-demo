@@ -114,4 +114,34 @@ public class TestRecordDao {
         }
         return tr;
     }
+    /**
+     * 计算全网所有测试记录的维度平均分
+     * 返回一个包含 E/I, S/N, T/F, J/P 8个维度平均分的 Map
+     */
+    public java.util.Map<String, Double> getDimensionAverages() {
+        java.util.Map<String, Double> avgs = new java.util.HashMap<>();
+        String sql = "SELECT AVG(e_score), AVG(i_score), AVG(s_score), AVG(n_score), AVG(t_score), AVG(f_score), AVG(j_score), AVG(p_score) FROM test_record";
+
+        try (java.sql.Connection conn = com.mbti.training.utils.DBUtils.getConnection();
+             java.sql.PreparedStatement pstmt = conn.prepareStatement(sql);
+             java.sql.ResultSet rs = pstmt.executeQuery()) {
+
+            if (rs.next()) {
+                // 这里我们手动封装，并保留一位小数，方便前端显示
+                avgs.put("e", Math.round(rs.getDouble(1) * 10.0) / 10.0);
+                avgs.put("i", Math.round(rs.getDouble(2) * 10.0) / 10.0);
+                avgs.put("s", Math.round(rs.getDouble(3) * 10.0) / 10.0);
+                avgs.put("n", Math.round(rs.getDouble(4) * 10.0) / 10.0);
+                avgs.put("t", Math.round(rs.getDouble(5) * 10.0) / 10.0);
+                avgs.put("f", Math.round(rs.getDouble(6) * 10.0) / 10.0);
+                avgs.put("j", Math.round(rs.getDouble(7) * 10.0) / 10.0);
+                avgs.put("p", Math.round(rs.getDouble(8) * 10.0) / 10.0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return avgs;
+    }
+    //
+
 }
