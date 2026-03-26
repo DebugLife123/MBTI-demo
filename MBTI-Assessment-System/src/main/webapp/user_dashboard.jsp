@@ -122,7 +122,7 @@
                                 <p class="mb-0 opacity-75">完成精选测试题，获取深度的职业性格解析报告。</p>
                             </div>
                             <div class="text-center mb-5">
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#testIntroModal" class="btn btn-light btn-lg rounded-pill px-5 py-3 fw-bold text-primary shadow-lg hover-lift" style="letter-spacing: 2px;">
+                                <a href="testSelect" class="btn btn-light btn-lg rounded-pill px-5 py-3 fw-bold text-primary shadow-lg hover-lift" style="letter-spacing: 2px;">
                                     立即开始测试 🚀
                                 </a>
                             </div>
