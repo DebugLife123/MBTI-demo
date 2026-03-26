@@ -4,7 +4,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>管理员控制台 - MBTI 系统</title>
+    <title>管理员控制台 - MBTI职业性格测试系统</title>
     <link href="https://cdn.staticfile.org/twitter-bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
     <link href="static/css/style.css" rel="stylesheet">
     <script src="https://cdn.staticfile.org/echarts/5.4.3/echarts.min.js"></script>

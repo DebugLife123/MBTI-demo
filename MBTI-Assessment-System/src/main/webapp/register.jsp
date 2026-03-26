@@ -47,7 +47,7 @@
     <div class="col-12 col-sm-8 col-md-6 col-lg-4">
 
       <div class="text-center mb-4">
-        <a href="index.jsp" class="text-decoration-none fs-4 fw-bold" style="color: #333; text-shadow: 0 2px 4px rgba(255,255,255,0.5);">🧩 MBTI 测评系统</a>
+        <a href="index.jsp" class="text-decoration-none fs-4 fw-bold" style="color: #333; text-shadow: 0 2px 4px rgba(255,255,255,0.5);">🧩 MBTI职业性格测评系统</a>
       </div>
 
       <div class="glass-form-card">
@@ -64,6 +64,13 @@
           </div>
           <div class="mb-4">
             <input type="text" name="realName" class="form-control glass-input" placeholder="📝 您的真实姓名 (用于报告)" required>
+          </div>
+          <div class="mb-4">
+            <select name="role" class="form-control glass-input" required>
+              <option value="" disabled selected>👤 选择您的身份</option>
+              <option value="STUDENT">学生</option>
+              <option value="TEACHER">教师</option>
+            </select>
           </div>
 
           <c:if test="${not empty requestScope.errorMsg}">

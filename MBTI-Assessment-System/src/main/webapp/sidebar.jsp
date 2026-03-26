@@ -27,6 +27,11 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a href="userManage" class="nav-link ${param.active == 'users' ? 'active' : ''}">
+                    👥 用户管理
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="recordManage" class="nav-link ${param.active == 'records' ? 'active' : ''}">
                     📊 测试概览
                 </a>
@@ -38,7 +43,7 @@
             </li>
         </c:if>
 
-        <c:if test="${sessionScope.loginUser.role == 'STUDENT'}">
+        <c:if test="${sessionScope.loginUser.role == 'STUDENT' || sessionScope.loginUser.role == 'TEACHER'}">
             <li class="nav-item">
                 <a href="startTest" class="nav-link ${param.active == 'test' ? 'active' : ''}">
                     📝 在线测试

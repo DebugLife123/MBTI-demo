@@ -46,8 +46,13 @@
                                     <input type="text" name="realName" class="form-control" value="${sessionScope.loginUser.realName}" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label text-muted">系统角色</label>
-                                    <input type="text" class="form-control" value="普通学生" readonly style="background: #f8f9fa;">
+                                    <label class="form-label text-muted">系统角色 (不可修改)</label>
+                                    <c:choose>
+                                        <c:when test="${sessionScope.loginUser.role == 'ADMIN'}"><c:set var="roleName" value="管理员"/></c:when>
+                                        <c:when test="${sessionScope.loginUser.role == 'TEACHER'}"><c:set var="roleName" value="教师"/></c:when>
+                                        <c:otherwise><c:set var="roleName" value="学生"/></c:otherwise>
+                                    </c:choose>
+                                    <input type="text" class="form-control" value="${roleName}" readonly style="background: #f8f9fa; cursor: not-allowed;">
                                 </div>
 
                                 <div class="mt-5">

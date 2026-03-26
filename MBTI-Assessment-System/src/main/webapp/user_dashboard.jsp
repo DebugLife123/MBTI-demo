@@ -42,7 +42,7 @@
                             </div>
                             <p class="mb-2 text-muted"><strong>登录账号：</strong> ${sessionScope.loginUser.username}</p>
                             <p class="mb-2 text-muted"><strong>真实姓名：</strong> ${sessionScope.loginUser.realName}</p>
-                            <p class="mb-2 text-muted"><strong>用户角色：</strong> 学生</p>
+                            <p class="mb-2 text-muted"><strong>用户角色：</strong>  ${sessionScope.loginUser.role}</p>
                         </div>
                     </div>
                 </div>

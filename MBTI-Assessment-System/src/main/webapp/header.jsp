@@ -13,13 +13,19 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="index.jsp">🧩 MBTI 测评系统</a>
+        <a class="navbar-brand fw-bold" href="index.jsp">🧩 MBTI职业性格测评系统</a>
 
         <div class="ms-auto d-flex align-items-center">
             <c:if test="${not empty sessionScope.loginUser}">
                 <div class="user-tag text-white">
                     👤 欢迎：<strong>${sessionScope.loginUser.realName}</strong>
-                    <span class="badge bg-light text-dark ms-1">${sessionScope.loginUser.role == 'ADMIN' ? '管理员' : '学生'}</span>
+                    <span class="badge bg-light text-dark ms-1">
+                        <c:choose>
+                            <c:when test="${sessionScope.loginUser.role == 'ADMIN'}">管理员</c:when>
+                            <c:when test="${sessionScope.loginUser.role == 'TEACHER'}">教师</c:when>
+                            <c:otherwise>学生</c:otherwise>
+                        </c:choose>
+                    </span>
                 </div>
                 <a href="index.jsp" class="btn btn-sm btn-outline-light ms-3">退出</a>
             </c:if>

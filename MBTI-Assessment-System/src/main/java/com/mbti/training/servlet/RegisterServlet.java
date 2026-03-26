@@ -17,6 +17,7 @@ public class RegisterServlet extends HttpServlet {
         String u = request.getParameter("username");
         String p = request.getParameter("password");
         String rName = request.getParameter("realName");
+        String role = request.getParameter("role"); // 🌟 获取角色
 
         // 1. 检查账号是否被占用
         if (userDao.checkUserExists(u)) {
@@ -26,7 +27,7 @@ public class RegisterServlet extends HttpServlet {
         }
 
         // 2. 执行注册
-        boolean success = userDao.register(u, p, rName);
+        boolean success = userDao.register(u, p, rName,role);
         if (success) {
             // 注册成功，带着成功提示去登录页
             request.setAttribute("successMsg", "注册成功！请登录。");
