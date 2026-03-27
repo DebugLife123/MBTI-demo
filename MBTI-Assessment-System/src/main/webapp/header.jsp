@@ -1,10 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%-- 必须在第一行或第二行加入这个声明，否则 <c:if> 等标签无法生效 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<link href="https://cdn.staticfile.org/twitter-bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://gs.jurieo.com/gemini/fonts-googleapis/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
-
+<link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
 <style>
     body { font-family: 'Noto Sans SC', sans-serif; background-color: #f8f9fa; }
     .navbar { box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 30px; }

@@ -18,7 +18,7 @@ import java.util.Map;
 
 /**
  * 管理员 - 测试记录管理控制器
- * 支持：全网记录分页/列表展示、查看他人报告、删除异常记录
+ * 支持：全网记录分页/列表展示、模糊搜索、查看他人报告、删除异常记录
  */
 @WebServlet("/recordManage")
 public class RecordManageServlet extends HttpServlet {
@@ -29,60 +29,66 @@ public class RecordManageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // 1. 安全检查：确保只有管理员能操作
         SysUser user = (SysUser) request.getSession().getAttribute("loginUser");
         if (user == null || !"ADMIN".equals(user.getRole())) {
             response.sendRedirect("index.jsp");
             return;
         }
 
-        // 2. 获取操作标识 (method)
         String method = request.getParameter("method");
 
         if ("delete".equals(method)) {
-            // --- 功能 A：删除记录 ---
             handleDelete(request, response);
         } else if ("view".equals(method)) {
-            // --- 功能 B：查看报告详情 ---
             doViewReport(request, response);
         } else {
-            // --- 默认：展示列表首页 ---
             showList(request, response);
         }
     }
 
     /**
-     * 展示全网测试记录列表
+     * 🌟 展示全网测试记录列表 (含搜索与分页)
      */
     private void showList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // 获取所有用户的测试统计记录 (多表关联查询)
-        List<Map<String, Object>> logs = adminDao.getAllTestLogs();
+        String keyword = request.getParameter("keyword");
+        String pageStr = request.getParameter("page");
+
+        int page = 1;
+        int pageSize = 10; // 每页显示 10 条记录
+
+        if (pageStr != null && !pageStr.isEmpty()) {
+            page = Integer.parseInt(pageStr);
+        }
+
+        int offset = (page - 1) * pageSize;
+
+        // 1. 获取总记录数和计算总页数
+        int totalCount = adminDao.getTestLogCount(keyword);
+        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+
+        // 2. 获取当前页的数据
+        List<Map<String, Object>> logs = adminDao.getTestLogsByPage(keyword, offset, pageSize);
+
+        // 3. 将数据放入 request 作用域
         request.setAttribute("logs", logs);
-        // 转发至新创建的概览页面
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("keyword", keyword == null ? "" : keyword);
+        request.setAttribute("totalCount", totalCount);
+
         request.getRequestDispatcher("record_list.jsp").forward(request, response);
     }
 
-    /**
-     * 查看特定测试记录的详细报告 (复用结果页展示逻辑)
-     */
     private void doViewReport(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             int recordId = Integer.parseInt(request.getParameter("id"));
-
-            // 1) 从数据库查出该条记录的具体分数
-            // 注意：这里需要调用一个不校验 userId 的查询方法，或者在 DAO 中新增 adminGetRecordById
             TestRecord record = recordDao.getRecordById(recordId);
 
             if (record != null) {
-                // 2) 根据记录的性格代码 (如 INTJ) 获取解析文案
                 Personality p = personalityDao.getByTypeCode(record.getResultType());
-
-                // 3) 封装结果并转发至 result.jsp
-                // 这样管理员看到的界面和学生看到的一模一样，实现代码高度复用
                 request.setAttribute("myResult", record.getResultType());
                 request.setAttribute("scores", record);
                 request.setAttribute("personality", p);
-
                 request.getRequestDispatcher("result.jsp").forward(request, response);
             } else {
                 response.sendRedirect("recordManage");
@@ -93,18 +99,13 @@ public class RecordManageServlet extends HttpServlet {
         }
     }
 
-    /**
-     * 执行记录删除逻辑
-     */
     private void handleDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             int recordId = Integer.parseInt(request.getParameter("id"));
-            // 调用 DAO 执行物理删除 (需要在 TestRecordDao 中补充此方法)
             recordDao.delete(recordId);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // 删除后刷新列表
         response.sendRedirect("recordManage");
     }
 

@@ -3,7 +3,7 @@
 <%-- 这是一个通用的左侧导航栏组件，支持管理员和学生双角色 --%>
 <div class="sidebar">
     <div class="p-4 text-center border-bottom border-secondary mb-3">
-        <h4 class="fw-bold mb-0" style="letter-spacing: 1px;">🧩 MBTI 系统</h4>
+        <h4 class="fw-bold mb-0" style="letter-spacing: 1px;">🧩 MBTI职业性格测试系统</h4>
     </div>
 
     <ul class="nav nav-pills flex-column mb-auto">

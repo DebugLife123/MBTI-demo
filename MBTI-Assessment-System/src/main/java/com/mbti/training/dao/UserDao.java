@@ -230,4 +230,72 @@ public class UserDao {
         } catch (Exception e) { e.printStackTrace(); }
         return false;
     }
+
+    /**
+     * 🌟 1. 获取用户总数 (支持按用户名或真实姓名模糊查询)
+     */
+    public int getUserCount(String keyword) {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM sys_user";
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql += " WHERE username LIKE ? OR real_name LIKE ?";
+        }
+
+        try (Connection conn = DBUtils.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                String likeKw = "%" + keyword.trim() + "%";
+                pstmt.setString(1, likeKw);
+                pstmt.setString(2, likeKw);
+            }
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt(1);
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return count;
+    }
+
+    /**
+     * 🌟 2. 分页查询用户列表 (支持模糊查询)
+     */
+    public List<SysUser> getUsersByPage(String keyword, int offset, int limit) {
+        List<SysUser> list = new ArrayList<>();
+        String sql = "SELECT * FROM sys_user";
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql += " WHERE username LIKE ? OR real_name LIKE ?";
+        }
+        // 核心 SQL: 按照时间倒序排列，并使用 LIMIT 进行分页截断
+        sql += " ORDER BY create_time DESC LIMIT ?, ?";
+
+        try (Connection conn = DBUtils.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            int paramIndex = 1;
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                String likeKw = "%" + keyword.trim() + "%";
+                pstmt.setString(paramIndex++, likeKw);
+                pstmt.setString(paramIndex++, likeKw);
+            }
+            pstmt.setInt(paramIndex++, offset); // 跳过多少条
+            pstmt.setInt(paramIndex, limit);    // 取多少条
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    SysUser user = new SysUser();
+                    user.setId(rs.getInt("id"));
+                    user.setUsername(rs.getString("username"));
+                    user.setPassword(rs.getString("password"));
+                    user.setRealName(rs.getString("real_name"));
+                    user.setRole(rs.getString("role"));
+                    user.setCreateTime(rs.getTimestamp("create_time"));
+                    list.add(user);
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
 }

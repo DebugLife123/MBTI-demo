@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -93,33 +94,37 @@
                                         <div class="fs-2 mb-2">📄</div>
                                         <h6 class="fw-bold">成绩报表</h6>
                                         <p class="small text-muted mb-3">查看并分析所有学生测评详情</p>
-                                        <button class="btn btn-outline-primary w-100 rounded-pill" onclick="window.print()">导出系统报表</button>
+                                        <a href="exportExcel" class="btn btn-outline-primary w-100 rounded-pill shadow-sm">
+                                            ⬇️ 导出真实 Excel 报表
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                //
 
-                <div class="row mt-4">
-                    <div class="col-12 col-xl-8">
-                        <div class="card border-0 shadow-sm rounded-4">
+                <div class="row mt-4 w-100 m-0 p-0">
+                    <div class="col-12 col-xl-5 mb-4 ps-0">
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
                             <div class="card-body p-4">
-                                <h5 class="fw-bold mb-4">全网学生性格维度平均分数</h5>
-
+                                <h5 class="fw-bold mb-4">全网学生性格维度平均分</h5>
                                 <div id="dimPieChart" style="width: 100%; height: 400px;"></div>
+                                <p class="text-muted small mt-3 text-center">💡 提示：此图表反映了考生的平均性格倾向倾向。</p>
+                            </div>
+                        </div>
+                    </div>
 
-                                <p class="text-muted small mt-3 text-center">💡 提示：此图表反映了全校考生的平均性格倾向倾向。</p>
+                    <div class="col-12 col-xl-7 mb-4 pe-0">
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
+                            <div class="card-body p-4">
+                                <h5 class="fw-bold mb-4">👑 核心人格 (MBTI) 分布排行</h5>
+                                <div id="typeBarChart" style="width: 100%; height: 400px;"></div>
+                                <p class="text-muted small mt-3 text-center">💡 提示：按人数降序排列，直观展示本校最高频性格。</p>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                //
-
-
-
 
             </div>
         </div>
@@ -128,11 +133,12 @@
 
 <script src="https://cdn.staticfile.org/twitter-bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
-    // 1. 基于准备好的dom，初始化echarts实例
+    // =========================================================
+    // 1. 初始化左侧：MBTI 维度全网平均倾向 (饼图)
+    // =========================================================
     var myChart = echarts.init(document.getElementById('dimPieChart'));
 
-    // 2. 🌟 核心：通过 JSP 表达式注入后端塞进去的数据
-    // 这里我们拿 eAvg, iAvg 等属性，如果没有数据，默认给 0
+    // 接收后端传来的维度平均分数据
     var eVal = ${eAvg != null ? eAvg : 0.0};
     var iVal = ${iAvg != null ? iAvg : 0.0};
     var sVal = ${sAvg != null ? sAvg : 0.0};
@@ -142,16 +148,10 @@
     var jVal = ${jAvg != null ? jAvg : 0.0};
     var pVal = ${pAvg != null ? pAvg : 0.0};
 
-    // 3. 指定图表的配置项和数据
     var option = {
-        title: {
-            text: 'MBTI 维度全网平均倾向',
-            subtext: 'E/I, S/N, T/F, J/P 四组维度倾向',
-            left: 'center'
-        },
         tooltip: {
             trigger: 'item',
-            formatter: '{a} <br/>{b} : {c} 分 ({d}%)' // 这里显示分数和百分比
+            formatter: '{a} <br/>{b} : {c} 分 ({d}%)'
         },
         legend: {
             orient: 'vertical',
@@ -162,10 +162,9 @@
             {
                 name: '全网平均分',
                 type: 'pie',
-                radius: '65%', // 饼图半径
-                center: ['50%', '60%'], // 饼图中心位置
+                radius: '65%',
+                center: ['50%', '60%'],
                 data: [
-                    // 将维度数据封装进 series.data
                     { value: eVal, name: 'E-外倾' },
                     { value: iVal, name: 'I-内倾' },
                     { value: sVal, name: 'S-感觉' },
@@ -184,16 +183,67 @@
                 }
             }
         ],
-        // 🌟 答辩亮点：增加自适应窗口大小
         responsive: true
     };
-
-    // 4. 使用刚指定的配置项和数据显示图表。
     myChart.setOption(option);
 
-    // 5. 🌟 核心：浏览器窗口大小变化时，图表自动 resize
+    // =========================================================
+    // 2. 初始化右侧：人群分布排行 (高级柱状图)
+    // =========================================================
+    var typeBarChart = echarts.init(document.getElementById('typeBarChart'));
+
+    // 接收后端生成的 JSON 数组字符串 (如没有数据，则渲染空数组 [])
+    var barNames = ${typeBarNames != null ? typeBarNames : "[]"};
+    var barValues = ${typeBarValues != null ? typeBarValues : "[]"};
+
+    var barOption = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'shadow' } // 鼠标移入显示阴影
+        },
+        grid: { left: '3%', right: '4%', bottom: '5%', containLabel: true },
+        xAxis: {
+            type: 'category',
+            data: barNames,
+            axisLabel: {
+                interval: 0,
+                rotate: 30, // 标签倾斜，防止 16 个类型文字重叠
+                fontWeight: 'bold',
+                color: '#555'
+            },
+            axisTick: { alignWithLabel: true }
+        },
+        yAxis: { type: 'value', name: '测试人数 (人)' },
+        series: [{
+            name: '人数',
+            type: 'bar',
+            barWidth: '55%',
+            data: barValues,
+            label: {
+                show: true, // 在柱子顶部显示数字
+                position: 'top',
+                color: '#188df0',
+                fontWeight: 'bold'
+            },
+            itemStyle: {
+                // 设置炫酷的渐变蓝柱子
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    { offset: 0, color: '#83bff6' },
+                    { offset: 0.5, color: '#188df0' },
+                    { offset: 1, color: '#0b5ed7' }
+                ]),
+                borderRadius: [6, 6, 0, 0] // 顶部圆角
+            }
+        }]
+    };
+    typeBarChart.setOption(barOption);
+
+    // =========================================================
+    // 3. 监听浏览器窗口调整，使两个图表都实现自适应重绘
+    // =========================================================
     window.addEventListener('resize', function() {
         myChart.resize();
+        typeBarChart.resize();
     });
 </script>
 

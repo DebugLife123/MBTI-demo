@@ -6,6 +6,7 @@
     <title>测评报告 - MBTI 职业性格测试</title>
     <link href="https://cdn.staticfile.org/twitter-bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
     <link href="static/css/style.css" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/echarts/5.4.3/echarts.min.js"></script>
 </head>
 <body>
 
@@ -36,7 +37,11 @@
                             <h4 class="text-secondary mt-2">${requestScope.personality.title}</h4>
                         </div>
 
-                        <div class="mt-4 mb-5">
+                        <div class="mt-4 mb-4">
+                            <div id="radarChart" style="width: 100%; height: 400px;"></div>
+                        </div>
+
+                        <div class="mt-2 mb-5">
                             <h6 class="text-muted mb-3">📊 维度得分详情：</h6>
                             <div class="row g-2 text-center">
                                 <div class="col-3"><div class="p-2 bg-light border rounded small">E: ${requestScope.scores.eScore} / I: ${requestScope.scores.iScore}</div></div>
@@ -68,5 +73,92 @@
 </div>
 
 <script src="https://cdn.staticfile.org/twitter-bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        // 初始化 ECharts 实例
+        var radarChart = echarts.init(document.getElementById('radarChart'));
+
+        // 接收后端传来的个人分数 (如果为空则默认为0)
+        var scores = [
+            ${requestScope.scores.eScore != null ? requestScope.scores.eScore : 0},
+            ${requestScope.scores.sScore != null ? requestScope.scores.sScore : 0},
+            ${requestScope.scores.tScore != null ? requestScope.scores.tScore : 0},
+            ${requestScope.scores.jScore != null ? requestScope.scores.jScore : 0},
+            ${requestScope.scores.iScore != null ? requestScope.scores.iScore : 0},
+            ${requestScope.scores.nScore != null ? requestScope.scores.nScore : 0},
+            ${requestScope.scores.fScore != null ? requestScope.scores.fScore : 0},
+            ${requestScope.scores.pScore != null ? requestScope.scores.pScore : 0}
+        ];
+
+        // 图表配置项
+        var option = {
+            title: {
+                text: '八大维度倾向分析雷达',
+                left: 'center',
+                textStyle: { color: '#495057', fontSize: 16 }
+            },
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                borderColor: '#ccc',
+                borderWidth: 1,
+                textStyle: { color: '#333' }
+            },
+            radar: {
+                // 每组题最多 7 分，设置最大值为 7 保证图表比例饱满且准确
+                indicator: [
+                    { name: '外倾 (E)', max: 7 },
+                    { name: '感觉 (S)', max: 7 },
+                    { name: '思考 (T)', max: 7 },
+                    { name: '判断 (J)', max: 7 },
+                    { name: '内倾 (I)', max: 7 },
+                    { name: '直觉 (N)', max: 7 },
+                    { name: '情感 (F)', max: 7 },
+                    { name: '感知 (P)', max: 7 }
+                ],
+                shape: 'polygon', // 多边形外观
+                splitNumber: 4,
+                axisName: {
+                    color: '#fff',
+                    backgroundColor: '#6c757d',
+                    borderRadius: 3,
+                    padding: [3, 6],
+                    fontWeight: 'bold'
+                },
+                splitArea: {
+                    areaStyle: {
+                        color: ['rgba(250,250,250,0.3)', 'rgba(200,200,200,0.1)']
+                    }
+                },
+                axisLine: { lineStyle: { color: 'rgba(0, 0, 0, 0.1)' } },
+                splitLine: { lineStyle: { color: 'rgba(0, 0, 0, 0.1)' } }
+            },
+            series: [{
+                name: '个人维度得分',
+                type: 'radar',
+                data: [{
+                    value: scores,
+                    name: '得分详情',
+                    itemStyle: { color: '#4e73df' }, // 漂亮的渐变蓝
+                    lineStyle: { width: 3 },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: 'rgba(78, 115, 223, 0.6)' },
+                            { offset: 1, color: 'rgba(78, 115, 223, 0.1)' }
+                        ])
+                    }
+                }]
+            }]
+        };
+
+        // 渲染图表
+        radarChart.setOption(option);
+
+        // 窗口缩放时自适应
+        window.addEventListener('resize', function() {
+            radarChart.resize();
+        });
+    });
+</script>
 </body>
 </html>

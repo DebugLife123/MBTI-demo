@@ -36,9 +36,34 @@ public class UserManageServlet extends HttpServlet {
             userDao.resetPassword(id); // 重置后，旧密码失效，必须输入 123456 才能进
             response.sendRedirect("userManage");
         } else {
-            // 默认展示用户列表
-            List<SysUser> users = userDao.getAllUsers();
+            // --- 🌟 分页与搜索核心逻辑 ---
+            String keyword = request.getParameter("keyword");
+            String pageStr = request.getParameter("page");
+
+            int page = 1;
+            int pageSize = 10; // 规定每页显示 10 条数据
+
+            if (pageStr != null && !pageStr.isEmpty()) {
+                page = Integer.parseInt(pageStr);
+            }
+
+            // 计算 SQL 查询的起始位置 (offset)
+            int offset = (page - 1) * pageSize;
+
+            // 查询总人数，计算总页数
+            int totalCount = userDao.getUserCount(keyword);
+            int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+
+            // 获取当前页的数据集合
+            List<SysUser> users = userDao.getUsersByPage(keyword, offset, pageSize);
+
+            // 将所有变量打包塞进 request，准备发给 JSP 渲染
             request.setAttribute("userList", users);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("keyword", keyword == null ? "" : keyword); // 回显搜索词
+            request.setAttribute("totalCount", totalCount);
+
             request.getRequestDispatcher("user_list.jsp").forward(request, response);
         }
     }

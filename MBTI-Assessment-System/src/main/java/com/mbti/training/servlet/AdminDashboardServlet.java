@@ -67,6 +67,31 @@ public class AdminDashboardServlet extends HttpServlet {
             request.setAttribute("jAvg", 0.0);
             request.setAttribute("pAvg", 0.0);
         }
+        // --- 🌟 新增：获取 MBTI 人群分布数据 ---
+        List<Map<String, Object>> typeDistribution = adminDao.getPersonalityTypeDistribution();
+
+        // 我们手动拼接两个前端需要的 JavaScript 数组字符串：一个存名字，一个存人数
+        StringBuilder barNames = new StringBuilder("[");
+        StringBuilder barValues = new StringBuilder("[");
+
+        for (int i = 0; i < typeDistribution.size(); i++) {
+            Map<String, Object> item = typeDistribution.get(i);
+            barNames.append("'").append(item.get("name")).append("'");
+            barValues.append(item.get("value"));
+
+            if (i < typeDistribution.size() - 1) {
+                barNames.append(",");
+                barValues.append(",");
+            }
+        }
+        barNames.append("]");
+        barValues.append("]");
+
+        // 塞入 request 域，供 JSP 使用
+        request.setAttribute("typeBarNames", barNames.toString());
+        request.setAttribute("typeBarValues", barValues.toString());
+        // --- 结束新增 ---
+
 
         // 5. 转发到管理员看板 JSP 页面
         request.getRequestDispatcher("admin_dashboard.jsp").forward(request, response);

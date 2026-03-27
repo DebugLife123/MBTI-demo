@@ -20,7 +20,13 @@
         <div class="topbar"><div class="text-muted">管理员: <strong>${sessionScope.loginUser.realName}</strong></div></div>
 
         <div class="container-fluid p-4 p-md-5">
-            <h3 class="fw-bold mb-4">👥 系统用户管理</h3>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-bold mb-0">👥 系统用户管理</h3>
+                <form action="userManage" method="get" class="d-flex" style="width: 350px;">
+                    <input type="text" name="keyword" value="${requestScope.keyword}" class="form-control rounded-pill me-2 border-primary" placeholder="🔍 搜索账号或真实姓名...">
+                    <button type="submit" class="btn btn-primary rounded-pill px-4">搜索</button>
+                </form>
+            </div>
 
             <div class="card border-0 shadow-sm rounded-4">
                 <div class="card-body p-0">
@@ -38,7 +44,7 @@
                         <tbody>
                         <c:forEach items="${requestScope.userList}" var="u" varStatus="st">
                             <tr>
-                                <td class="ps-4 text-muted">${st.count}</td>
+                                <td class="ps-4 text-muted">${(currentPage - 1) * 10 + st.count}</td>
                                 <td class="fw-bold">${u.username}</td>
                                 <td><span class="text-muted font-monospace">${u.password}</span></td>
                                 <td>${u.realName}</td>
@@ -67,6 +73,33 @@
                         </c:forEach>
                         </tbody>
                     </table>
+                </div>
+                <div class="card-footer bg-white border-top-0 p-4 rounded-bottom-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted small">
+                            共找到 <strong>${totalCount}</strong> 名用户，当前第 <strong class="text-primary">${currentPage}</strong> / ${totalPages > 0 ? totalPages : 1} 页
+                        </span>
+
+                        <c:if test="${totalPages > 1}">
+                            <nav>
+                                <ul class="pagination pagination-sm mb-0 shadow-sm">
+                                    <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                        <a class="page-link px-3" href="userManage?page=${currentPage - 1}&keyword=${keyword}">上一页</a>
+                                    </li>
+
+                                    <c:forEach begin="1" end="${totalPages}" var="i">
+                                        <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                            <a class="page-link" href="userManage?page=${i}&keyword=${keyword}">${i}</a>
+                                        </li>
+                                    </c:forEach>
+
+                                    <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                        <a class="page-link px-3" href="userManage?page=${currentPage + 1}&keyword=${keyword}">下一页</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </c:if>
+                    </div>
                 </div>
             </div>
         </div>
