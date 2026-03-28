@@ -42,6 +42,11 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a href="testPlanManage" class="nav-link ${param.active == 'assessments' ? 'active' : ''}">
+                    📅 测试安排管理
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="testSelect" class="nav-link ${param.active == 'test' ? 'active' : ''}">
                     📝 在线测试
                 </a>
@@ -49,6 +54,11 @@
         </c:if>
 
         <c:if test="${sessionScope.loginUser.role == 'STUDENT' || sessionScope.loginUser.role == 'TEACHER'}">
+            <li class="nav-item">
+                <a href="testRegistration" class="nav-link ${param.active == 'registration' ? 'active' : ''}">
+                    📢 测试报名大厅
+                </a>
+            </li>
             <li class="nav-item">
                 <a href="testSelect" class="nav-link ${param.active == 'test' ? 'active' : ''}">
                     📝 在线测试
