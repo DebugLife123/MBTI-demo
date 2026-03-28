@@ -48,7 +48,10 @@
                                 <td>${q.optionA} <span class="badge bg-light text-dark">${q.optionAType}</span></td>
                                 <td>${q.optionB} <span class="badge bg-light text-dark">${q.optionBType}</span></td>
                                 <td class="text-end pe-4">
-                                    <a href="questionManage?method=delete&id=${q.id}" class="btn btn-sm btn-outline-danger" onclick="return confirm('确定删除吗？')">删除</a>
+                                    <a href="#" class="btn btn-sm btn-outline-danger"
+                                       onclick="confirmAction(event, 'questionManage?method=delete&id=${q.id}', '确定要删除这道题吗？', '删除后该题目数据将彻底从题库中移除！', '🗑️ 确认删除', '#dc3545')">
+                                        🗑️ 删除
+                                    </a>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -110,5 +113,29 @@
 </div>
 
 <script src="https://cdn.staticfile.org/twitter-bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function confirmAction(event, url, title, text, confirmBtnText, confirmBtnColor) {
+        event.preventDefault();
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: confirmBtnColor || '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: confirmBtnText || '确定',
+            cancelButtonText: '取消',
+            background: 'rgba(255, 255, 255, 0.9)',
+            backdrop: 'rgba(0,0,0,0.4)',
+            borderRadius: '15px'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
+    }
+</script>
 </body>
 </html>

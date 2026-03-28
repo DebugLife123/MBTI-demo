@@ -52,11 +52,10 @@
                                             onclick="openEditModal('${t.id}', '${t.typeName}', '${t.status}', '${t.price}')">
                                         ✏️ 修改
                                     </button>
-                                    <a href="assessmentManage?method=delete&id=${t.id}"
-                                       class="btn btn-sm btn-outline-danger"
-                                       onclick="return confirm('警告：确定要彻底删除该测评类型吗？');">
+                                    <a href='#' class="btn byn-sm btn-outline-danger" onclick="confirmAction(event, 'assessmentManage?method=delete&id=${t.id}', '确定要彻底删除该评测类型吗？', '删除后该评测类型将彻底从系统中移除！', '🗑️ 确认删除', '#dc3545')">
                                         🗑️ 删除
                                     </a>
+
                                 </td>
                             </tr>
                         </c:forEach>
@@ -128,6 +127,30 @@
         document.getElementById('modalStatus').value = status;
         document.getElementById('modalPrice').value = price;
         new bootstrap.Modal(document.getElementById('typeModal')).show();
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function confirmAction(event, url, title, text, confirmBtnText, confirmBtnColor) {
+        event.preventDefault();
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: confirmBtnColor || '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: confirmBtnText || '确定',
+            cancelButtonText: '取消',
+            background: 'rgba(255, 255, 255, 0.9)',
+            backdrop: 'rgba(0,0,0,0.4)',
+            borderRadius: '15px'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
     }
 </script>
 </body>

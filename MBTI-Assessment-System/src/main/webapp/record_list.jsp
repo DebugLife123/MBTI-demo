@@ -59,9 +59,8 @@
                                 <td class="text-end pe-4"> <a href="recordManage?method=view&id=${log.recordId}" class="btn btn-sm btn-outline-primary me-2">
                                     🔍 查看报告
                                 </a>
-                                    <a href="recordManage?method=delete&id=${log.recordId}"
-                                       class="btn btn-sm btn-outline-danger"
-                                       onclick="return confirm('确定要删除该用户的这条测试记录吗？')">
+                                    <a href="#" class="btn btn-sm btn-outline-danger"
+                                       onclick="confirmAction(event, 'recordManage?method=delete&id=${log.recordId}', '删除此测试记录？', '删除后该学生的此条成绩将从系统中抹除！', '🗑️ 确认删除', '#dc3545')">
                                         🗑️ 删除
                                     </a>
                                 </td>
@@ -108,5 +107,41 @@
 </div>
 
 <script src="https://cdn.staticfile.org/twitter-bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    /**
+     * 华丽的异步操作确认弹窗
+     * @param event 鼠标点击事件
+     * @param url 确认后要跳转的后端地址
+     * @param title 弹窗标题
+     * @param text 弹窗提示正文
+     * @param confirmBtnText 确认按钮的文字
+     * @param confirmBtnColor 确认按钮的颜色 (支持16进制)
+     */
+    function confirmAction(event, url, title, text, confirmBtnText, confirmBtnColor) {
+        // 🌟 1. 阻止 <a> 标签的默认直接跳转行为
+        event.preventDefault();
+
+        // 🌟 2. 呼出 SweetAlert2 弹窗
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: confirmBtnColor || '#d33', // 默认红色
+            cancelButtonColor: '#6c757d', // 默认灰色
+            confirmButtonText: confirmBtnText || '确定',
+            cancelButtonText: '取消',
+            background: 'rgba(255, 255, 255, 0.9)', // 配合你的毛玻璃 UI 微调背景
+            backdrop: 'rgba(0,0,0,0.4)',
+            borderRadius: '15px'
+        }).then((result) => {
+            // 🌟 3. 如果用户点击了确认，通过 JS 执行跳转
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
+    }
+</script>
 </body>
 </html>

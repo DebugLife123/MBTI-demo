@@ -43,8 +43,10 @@
                                 <td class="text-end pe-4">
                                     <button class="btn btn-sm btn-outline-primary me-1"
                                             onclick="editDim('${d.id}', '${d.dimName}', '${d.description}')">修改</button>
-                                    <a href="dimensionManage?method=delete&id=${d.id}"
-                                       class="btn btn-sm btn-outline-danger" onclick="return confirm('确定删除吗？')">删除</a>
+                                    <a href="#" class="btn btn-sm btn-outline-danger"
+                                       onclick="confirmAction(event, 'dimensionManage?method=delete&id=${dim.id}', '警告：确定删除该维度吗？', '删除性格维度可能会严重影响整个系统的测试结果计算逻辑！', '🗑️ 确认删除', '#dc3545')">
+                                        🗑️ 删除
+                                    </a>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -88,6 +90,30 @@
         document.getElementById('dimDescInput').value = desc;
         document.getElementById('modalTitle').innerText = "✏️ 修改性格维度";
         new bootstrap.Modal(document.getElementById('dimModal')).show();
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function confirmAction(event, url, title, text, confirmBtnText, confirmBtnColor) {
+        event.preventDefault();
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: confirmBtnColor || '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: confirmBtnText || '确定',
+            cancelButtonText: '取消',
+            background: 'rgba(255, 255, 255, 0.9)',
+            backdrop: 'rgba(0,0,0,0.4)',
+            borderRadius: '15px'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
     }
 </script>
 </body>

@@ -60,12 +60,12 @@
                                             onclick="editUser('${u.id}', '${u.username}', '${u.password}', '${u.realName}', '${u.role}')">
                                         ✏️ 修改
                                     </button>
-                                    <a href="userManage?method=resetPwd&id=${u.id}" class="btn btn-sm btn-outline-warning me-1"
-                                       onclick="return confirm('确定要将该用户的密码重置为 123456 吗？');">
+                                    <a href="#" class="btn btn-sm btn-outline-warning me-1"
+                                       onclick="confirmAction(event, 'userManage?method=resetPwd&id=${u.id}', '确定重置密码吗？', '该用户的密码将被重置为默认的 123456，旧密码将失效！', '🔄 确认重置', '#ffc107')">
                                         🔄 重置密码
                                     </a>
-                                    <a href="userManage?method=delete&id=${u.id}" class="btn btn-sm btn-outline-danger"
-                                       onclick="return confirm('【危险】确认删除该用户吗？这会同时清空他的所有测试记录！');">
+                                    <a href="#" class="btn btn-sm btn-outline-danger"
+                                       onclick="confirmAction(event, 'userManage?method=delete&id=${u.id}', '【危险】彻底删除用户？', '这会同时清空该用户的所有测试记录，且数据不可恢复！', '🗑️ 确认删除', '#dc3545')">
                                         🗑️ 删除
                                     </a>
                                 </td>
@@ -155,6 +155,42 @@
         document.getElementById('modalRealName').value = realName;
         document.getElementById('modalRole').value = role;
         new bootstrap.Modal(document.getElementById('editUserModal')).show();
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    /**
+     * 华丽的异步操作确认弹窗
+     * @param event 鼠标点击事件
+     * @param url 确认后要跳转的后端地址
+     * @param title 弹窗标题
+     * @param text 弹窗提示正文
+     * @param confirmBtnText 确认按钮的文字
+     * @param confirmBtnColor 确认按钮的颜色 (支持16进制)
+     */
+    function confirmAction(event, url, title, text, confirmBtnText, confirmBtnColor) {
+        // 🌟 1. 阻止 <a> 标签的默认直接跳转行为
+        event.preventDefault();
+
+        // 🌟 2. 呼出 SweetAlert2 弹窗
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: confirmBtnColor || '#d33', // 默认红色
+            cancelButtonColor: '#6c757d', // 默认灰色
+            confirmButtonText: confirmBtnText || '确定',
+            cancelButtonText: '取消',
+            background: 'rgba(255, 255, 255, 0.9)', // 配合你的毛玻璃 UI 微调背景
+            backdrop: 'rgba(0,0,0,0.4)',
+            borderRadius: '15px'
+        }).then((result) => {
+            // 🌟 3. 如果用户点击了确认，通过 JS 执行跳转
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
     }
 </script>
 </body>
