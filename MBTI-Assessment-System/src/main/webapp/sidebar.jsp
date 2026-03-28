@@ -69,6 +69,11 @@
                     📊 历史记录
                 </a>
             </li>
+            <li class="nav-item mt-2">
+                <a class="nav-link ${param.active == 'aichat' ? 'active' : ''}" href="ai_chat.jsp">
+                    <span class="me-2">🤖</span> 问问 AI (MBTI咨询)
+                </a>
+            </li>
 
             <li class="nav-item mt-2">
                 <a href="#settingsCollapse" data-bs-toggle="collapse"
