@@ -11,7 +11,7 @@
 </head>
 <body>
 <div class="dashboard-wrapper">
-    <jsp:include page="sidebar.jsp"><jsp:param name="active" value="assessments"/></jsp:include>
+    <jsp:include page="sidebar.jsp"><jsp:param name="active" value="testplanmanage"/></jsp:include>
     <div class="main-content">
         <div class="container-fluid p-4 p-md-5">
             <div class="d-flex justify-content-between align-items-center mb-4">

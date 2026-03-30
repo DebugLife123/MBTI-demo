@@ -42,7 +42,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="testPlanManage" class="nav-link ${param.active == 'assessments' ? 'active' : ''}">
+                <a href="testPlanManage" class="nav-link ${param.active == 'testplanmanage' ? 'active' : ''}">
                     📅 测试安排管理
                 </a>
             </li>
